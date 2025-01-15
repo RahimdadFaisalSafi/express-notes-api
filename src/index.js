@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+app.use(express.json());
 port = 3000
 
 notes = [{
@@ -15,6 +16,21 @@ app.get('/notes', (req, res) => {
     res.json(notes)
 })
 
+app.get('/notes/:id', (req, res) => {
+    let id = parseInt(req.params.id, 10);
+
+    if (isNaN(id) || id <= 0) {
+        return res.status(404).send("ID Not Found");
+    }
+
+    id -= 1;
+
+    if (id in notes) {
+        return res.json(notes[id]);
+    } else {
+        return res.status(404).send("ID Not Found");
+    }
+})
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`)
 })
